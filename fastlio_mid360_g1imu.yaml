@@ -1,0 +1,60 @@
+# FAST-LIO2 (ROS2) 配置模板：MID-360 点云 + G1 本体 IMU
+#
+# 基于 Ericsii/FAST_LIO_ROS2 的 mid360.yaml 字段结构改写。
+# 若你用的端口/分支字段名不同，只需保证下面标了 "★" 的项正确。
+#
+# 关键差异（相对官方 mid360 配置）：
+#   - imu_topic 指向桥接后的 G1 IMU
+#   - extrinsic_T / extrinsic_R 必须替换为你实测的「LiDAR -> G1 IMU」外参
+#   - time_sync_en 保持 false（两者都用主机接收时间打标）
+
+/**:
+    ros__parameters:
+        feature_extract_enable: false
+        point_filter_num: 3
+        max_iteration: 3
+        filter_size_surf: 0.5
+        filter_size_map: 0.5
+        cube_side_length: 1000.0
+        runtime_pos_log_enable: false
+        map_file_path: "./test.pcd"
+
+        common:
+            lid_topic:  "/livox/lidar"        # ★ 你的点云话题
+            imu_topic:  "/g1/imu"             # ★ 桥接后的 G1 IMU
+            time_sync_en: false               # 无外部授时时保持 false
+            time_offset_lidar_to_imu: 0.0     # ★ 若轨迹明显滞后/超前，用 LI-Init 或扫参标定
+
+        preprocess:
+            lidar_type: 1                     # 1=Livox, 2=Velodyne, 3=Ouster, 4=其他 PointCloud2
+            scan_line:  4
+            blind: 0.5
+            timestamp_unit: 3
+            scan_rate: 10
+
+        mapping:
+            acc_cov: 0.1
+            gyr_cov: 0.1
+            b_acc_cov: 0.0001
+            b_gyr_cov: 0.0001
+            fov_degree:    360.0
+            det_range:     100.0
+            extrinsic_est_en:  false          # ★ 先用实测外参，标定稳定后可再考虑 true
+            # ★ LiDAR->IMU 平移(m)，必须实测，不能用占位值
+            extrinsic_T: [ 0.0, 0.0, 0.0 ]
+            # ★ LiDAR->IMU 旋转矩阵，行优先
+            extrinsic_R: [ 1.0, 0.0, 0.0,
+                           0.0, 1.0, 0.0,
+                           0.0, 0.0, 1.0 ]
+
+        publish:
+            path_en: true
+            effect_map_en: false
+            map_en: true
+            scan_publish_en: true
+            dense_publish_en: false
+            scan_bodyframe_pub_en: true
+
+        pcd_save:
+            pcd_save_en: true
+            interval: -1
