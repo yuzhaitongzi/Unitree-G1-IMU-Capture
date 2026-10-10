@@ -165,3 +165,6 @@ ros2 bag play --clock <bag目录>
 
 
 再加一个关节编码器 +  视觉一起采集。 多个 IMU
+
+
+end to end 误差。
