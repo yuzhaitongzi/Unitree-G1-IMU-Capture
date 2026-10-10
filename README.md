@@ -157,3 +157,11 @@ ros2 bag play --clock <bag目录>
 - `unitreerobotics/unitree_sdk2_python` — Python DDS 订阅
 - `Ericsii/FAST_LIO_ROS2` — FAST-LIO2 的 ROS2 端口与 `config/mid360.yaml`
 - `linchengli86/unitree-g1-onboard-SLAM-v0.1-mapping` — G1 机载 SLAM 实作参考
+
+
+
+
+
+
+
+再加一个关节编码器 +  视觉一起采集。
